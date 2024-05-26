@@ -1,0 +1,7 @@
+{% extends 'register/main.html' %}
+{% block content %}
+  {% for item in news %}
+    {{ item.name }}
+    {{ item.description }}
+  {% endfor %}
+{% endblock %}
