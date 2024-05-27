@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import createNewUser
-from .models import Courses, Students, StudentsReg, News
+from .models import *
 from .filters import CourseFilter
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
@@ -89,12 +89,12 @@ def register_course(request, course_id):
                         (reg.courseId.scheduleId.startTime <= course.scheduleId.startTime <= reg.courseId.scheduleId.endTime) or
                         (reg.courseId.scheduleId.startTime <= course.scheduleId.endTime <= reg.courseId.scheduleId.endTime)):
                     messages.error(request, 'There is a schedule conflict with another course.')
-                    return redirect('view', pk=course_id)
+                    return redirect('detals', pk=course_id)
 
         StudentsReg.objects.create(courseId=course, studentId=student)
         messages.success(request, 'You have successfully registered for the course.')
 
-    return redirect('view', pk=course_id)
+    return redirect('detals', pk=course_id)
 
 @login_required
 def delete_registration(request, course_id):
@@ -111,7 +111,7 @@ def delete_registration(request, course_id):
     else:
         messages.error(request, 'You are not registered for this course.')
 
-    return redirect('view', pk=course_id)
+    return redirect('detals', pk=course_id)
 
 @login_required(login_url='login')
 def userLogout(request):
@@ -120,16 +120,16 @@ def userLogout(request):
 
 @login_required(login_url='login')
 
-def news(request):
-    news = News.objects.all()
-    return render(request, 'register/news.html', {'news': news})
+def notifictions(request):
+    notifictions= Notifictions.objects.all()
+    return render(request, 'register/notifictions.html', {'notifictions': notifictions})
 
 @login_required(login_url='login')
-def view(request, pk):
+def detals(request, pk):
     course = get_object_or_404(Courses, id=pk)
     studentReg = StudentsReg.objects.filter(courseId=course).count()
     is_registered = StudentsReg.objects.filter(courseId=course, studentId=request.user.student).exists()
-    return render(request, 'register/view.html', {
+    return render(request, 'register/detals.html', {
         'course': course,
         'studentReg': studentReg,
         'is_registered': is_registered

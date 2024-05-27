@@ -38,7 +38,7 @@ class StudentsReg(models.Model):
     studentId = models.ForeignKey(Students, on_delete=models.SET_NULL, null=True)
     courseId = models.ForeignKey(Courses, on_delete=models.SET_NULL, null=True)
 
-class News(models.Model):
+class Notifictions(models.Model):
     name = models.CharField(max_length=50, null=True)
     description = models.CharField(max_length=200, null=True)
 
